@@ -26,7 +26,8 @@ const ProductListItem = ({
           [
             styles.favorites,
             {
-              backgroundColor: favoriteProducts.find((product) => product.id === id)
+              backgroundColor: favoriteProducts.length
+                && favoriteProducts.find((product) => product.id === id)
                 ? colors.neonCarrot
                 : colors.twilight,
             },

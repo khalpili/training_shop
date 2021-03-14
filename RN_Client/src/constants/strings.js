@@ -15,6 +15,7 @@ export default {
     addedCart: 'Добавлено в корзину',
     order: 'Оформить заказ',
   },
+  successOrder: 'Заказ успешно оформлен',
   searchPlaceholder: 'Поиск ...',
   sum: 'Сумма',
   empty: 'Товары отсутствуют',

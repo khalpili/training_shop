@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   StyleSheet, View, TouchableOpacity, StatusBar,
 } from 'react-native';
@@ -9,9 +9,11 @@ import CartScreen from '../screens/CartScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 
 import productsContext from '../context/products/productsContext';
+import Alert from '../components/Alert';
 import TabIcon from '../components/TabIcon';
 import colors from '../constants/colors';
 import strings from '../constants/strings';
+import API from '../api/api';
 
 const TAB_PRODUCTS = 'TAB_PRODUCTS';
 const TAB_FAVORITES = 'TAB_FAVORITES';
@@ -26,7 +28,24 @@ const AppNavigator = () => {
   const [activeTab, setActiveTab] = useState(TAB_PRODUCTS);
   const [activeScreen, setActiveScreen] = useState(SCREEN_HOME);
   const [lastHomeScreen, setLastHomeScreen] = useState(SCREEN_HOME);
-  const { setCurrentProduct } = useContext(productsContext);
+  const [isError, setIsError] = useState(false);
+  const [error, setError] = useState('');
+  const { setCurrentProduct, init } = useContext(productsContext);
+
+  const getProducts = async () => {
+    try {
+      const response = await API.getProducts();
+      init(response);
+      setIsError(false);
+    } catch (e) {
+      setIsError(true);
+      setError(e.status);
+    }
+  };
+
+  useEffect(() => {
+    getProducts();
+  }, []);
 
   const tabBarItems = [
     {
@@ -98,6 +117,7 @@ const AppNavigator = () => {
   const renderTabs = () => tabBarItems.map((item) => (
     <TouchableOpacity
       key={item.key}
+      activeOpacity={activeTab !== item.key ? 0 : 1}
       onPress={() => activeTab !== item.key && item.onPress()}
     >
       <TabIcon
@@ -113,10 +133,13 @@ const AppNavigator = () => {
     <>
       <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
       <View style={styles.container}>
-        {renderScreen()}
+        <View style={styles.screen}>
+          {renderScreen()}
+        </View>
         <View style={styles.tabBar}>
           {renderTabs()}
         </View>
+        <Alert title={error} success={false} isOpen={isError} setIsOpen={setIsError} />
       </View>
     </>
   );
@@ -127,14 +150,15 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: colors.white,
   },
+  screen: {
+    height: '91%',
+  },
   tabBar: {
-    position: 'absolute',
-    bottom: 0,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     flexDirection: 'row',
     width: '100%',
-    height: 70,
+    height: '9%',
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'space-around',

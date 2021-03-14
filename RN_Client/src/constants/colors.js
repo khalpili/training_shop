@@ -7,4 +7,5 @@ export default {
   gullGray: '#9EA7B5',
   transparent: 'transparent',
   mayGreen: '#3BAE4C',
+  modal: 'rgba(0, 0, 0, 0.7)',
 };

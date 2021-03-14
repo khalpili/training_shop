@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useContext, useEffect } from 'react';
 
+import Alert from '../components/Alert';
 import Container from '../components/Container';
 import Search from '../components/Search';
 import TabSort from '../components/TabSort';
@@ -13,6 +14,8 @@ const { ALL_CLOTHES } = constants.types.typeСlothes;
 const HomeScreen = ({ navigation }) => {
   const [searchValue, setSearchValue] = useState('');
   const [activeTab, setActiveTab] = useState(ALL_CLOTHES);
+  const [isError, setIsError] = useState(false);
+  const [error, setError] = useState('');
   const { filter } = useContext(productsContext);
 
   useEffect(() => {
@@ -29,7 +32,10 @@ const HomeScreen = ({ navigation }) => {
           </>
         )}
         navigation={navigation}
+        setError={setError}
+        setIsError={setIsError}
       />
+      <Alert title={error} success={false} isOpen={isError} setIsOpen={setIsError} />
     </Container>
   );
 };

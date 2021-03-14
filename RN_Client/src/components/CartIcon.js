@@ -9,7 +9,9 @@ import constants from '../constants/constants';
 
 const CartIcon = ({ iconName, isFull = false }) => {
   const { cartProducts } = useContext(productsContext);
-  const count = cartProducts.reduce((acc, current) => acc + current.count, 0);
+  const count = cartProducts.length
+    ? cartProducts.reduce((acc, current) => acc + current.count, 0)
+    : 0;
 
   return (
     <View>

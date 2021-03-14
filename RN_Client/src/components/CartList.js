@@ -25,7 +25,7 @@ const CartList = ({ header }) => {
     <FlatList
       style={styles.list}
       ListHeaderComponent={header}
-      data={cartProducts}
+      data={cartProducts.sort((prev, current) => prev.name > current.name)}
       keyExtractor={(item) => item.id}
       renderItem={renderItem}
       stickyHeaderIndices={[0]}
@@ -36,7 +36,7 @@ const CartList = ({ header }) => {
 
 const styles = StyleSheet.create({
   list: {
-    marginBottom: 70 + 145,
+    marginBottom: 145,
   },
 });
 

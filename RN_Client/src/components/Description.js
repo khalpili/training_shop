@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useRef, useContext, useState } from 'react';
 import {
-  Text, View, StyleSheet, TouchableOpacity, Animated, StatusBar,
+  Text, View, StyleSheet, TouchableOpacity, Animated,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -11,6 +11,10 @@ import colors from '../constants/colors';
 import constants from '../constants/constants';
 import strings from '../constants/strings';
 import utils from '../helpers/utils';
+
+const MARGIN = 20;
+const BEGIN_BOTTOM = 5;
+const SIZE_ICON = 17;
 
 const Description = ({
   id,
@@ -28,18 +32,22 @@ const Description = ({
     favoriteProducts, addFavorite, removeFavorite, cartProducts, addCart,
   } = useContext(productsContext);
   const [favorite, setFavorite] = useState(
-    Boolean(favoriteProducts.find((product) => product.id === id)),
+    favoriteProducts.length
+      ? Boolean(favoriteProducts.find((product) => product.id === id))
+      : false,
   );
   const [cart, setCart] = useState(
-    Boolean(cartProducts.find((product) => product.id === id)),
+    cartProducts.length
+      ? Boolean(cartProducts.find((product) => product.id === id))
+      : false,
   );
 
   const [down, setDown] = useState(true);
-  const bottomValue = useRef(new Animated.Value(0)).current;
+  const bottomValue = useRef(new Animated.Value(BEGIN_BOTTOM)).current;
 
   const onPressAnimation = () => {
     Animated.timing(bottomValue, {
-      toValue: down ? -heightLayout.current + 103 : 0,
+      toValue: down ? -heightLayout.current + MARGIN * 2 + SIZE_ICON + BEGIN_BOTTOM : BEGIN_BOTTOM,
       duration: 500,
       useNativeDriver: false,
     }).start();
@@ -127,7 +135,6 @@ const Description = ({
       <Button
         onPress={onPressCart}
         label={cart ? strings.cartButtons.addedCart : strings.cartButtons.addCart}
-        styleButton={cart ? styles.button : null}
         touchable={!cart}
       />
     </Animated.View>
@@ -137,22 +144,20 @@ const Description = ({
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 0,
     width: '100%',
     backgroundColor: colors.white,
     borderRadius: 30,
-    paddingBottom: 75 - StatusBar.currentHeight,
     paddingHorizontal: 25,
   },
   line: {
-    marginTop: 15,
+    marginTop: MARGIN,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    marginVertical: 25,
+    marginVertical: MARGIN,
   },
   wrapperViews: {
     flexDirection: 'row',
@@ -182,7 +187,7 @@ const styles = StyleSheet.create({
   },
   balanceWrapper: {
     width: '100%',
-    marginVertical: 25,
+    marginVertical: MARGIN,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -196,9 +201,6 @@ const styles = StyleSheet.create({
     fontFamily: constants.fontMainRegular,
     fontSize: 15,
     color: colors.gullGray,
-  },
-  button: {
-    backgroundColor: colors.gullGray,
   },
 });
 

@@ -45,12 +45,10 @@ const TabSort = ({ active, setActive }) => {
       {items.map((item) => (
         <TouchableOpacity key={item.key} onPress={() => active !== item.key && item.onPress()}>
           <Text
-            style={
-              [
-                styles.label,
-                { color: item.isActive ? colors.neonCarrot : colors.blueMagenta },
-              ]
-            }
+            style={[
+              styles.label,
+              { color: item.isActive ? colors.neonCarrot : colors.blueMagenta },
+            ]}
           >
             {item.label}
           </Text>

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useContext } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList } from 'react-native';
 
 import Empty from './Empty';
 import FavoritesListItem from './FavoritesListItem';
@@ -25,7 +25,6 @@ const FavoritesList = ({ header }) => {
       {favoriteProducts.length
         ? (
           <FlatList
-            style={styles.container}
             ListHeaderComponent={header}
             data={favoriteProducts}
             keyExtractor={(item) => item.id}
@@ -40,11 +39,5 @@ const FavoritesList = ({ header }) => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 70,
-  },
-});
 
 export default FavoritesList;

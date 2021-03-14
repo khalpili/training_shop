@@ -1,17 +1,35 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useContext } from 'react';
-import { FlatList, RefreshControl, StyleSheet } from 'react-native';
+import {
+  FlatList, RefreshControl, StyleSheet,
+} from 'react-native';
 
 import ProductListItem from './ProductListItem';
 import productsContext from '../context/products/productsContext';
+import API from '../api/api';
 
-const ProductsList = ({ header, navigation }) => {
+const ProductsList = ({
+  header, navigation, setError, setIsError,
+}) => {
   const [refreshing, setRefreshing] = useState(false);
-  const { filterProducts } = useContext(productsContext);
+  const { init, filterProducts } = useContext(productsContext);
+
+  const getProducts = async () => {
+    try {
+      const products = await API.getProducts();
+      init(products);
+      setIsError(false);
+    } catch (e) {
+      setIsError(true);
+      setError(e.status);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const onRefresh = () => {
     setRefreshing(true);
-    setTimeout(() => { setRefreshing(false); }, 2000);
+    getProducts();
   };
 
   const renderItem = ({ item }) => (
@@ -45,9 +63,6 @@ const ProductsList = ({ header, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 70,
-  },
   content: {
     justifyContent: 'space-between',
   },

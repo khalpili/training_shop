@@ -13,7 +13,9 @@ const types = {
     DRESS_CLOTHES: 'DRESS_CLOTHES',
     SHOES_CLOTHES: 'SHOES_CLOTHES',
     HOODY_CLOTHES: 'HOODY_CLOTHES',
-
+    DRESS_CLOTHES_1C: 'Платье',
+    SHOES_CLOTHES_1C: 'Обувь',
+    HOODY_CLOTHES_1C: 'Толстовка',
   },
 };
 

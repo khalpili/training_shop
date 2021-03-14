@@ -1,7 +1,12 @@
 import constants from '../constants/constants';
 
 const {
-  DRESS_CLOTHES, DRESS_CLOTHES_1C, HOODY_CLOTHES, HOODY_CLOTHES_1C, SHOES_CLOTHES, SHOES_CLOTHES_1C,
+  DRESS_CLOTHES,
+  DRESS_CLOTHES_1C,
+  HOODY_CLOTHES,
+  HOODY_CLOTHES_1C,
+  SHOES_CLOTHES,
+  SHOES_CLOTHES_1C,
 } = constants.types.typeСlothes;
 
 const getPrice = (price) => `${String(price).replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} ₽`;

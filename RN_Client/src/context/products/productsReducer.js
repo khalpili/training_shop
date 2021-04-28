@@ -16,9 +16,17 @@ const {
   FILTER,
   SET_CURRENT_PRODUCT,
   CLEAR_CART,
+  UPDATE_PRODUCT,
 } = types;
 
 const setItem = async (key, value) => AsyncStorage.setItem(key, JSON.stringify(value));
+
+const filterProducts = ({ products, productType, searchValue }) => products.filter(
+  (product) => (productType === ALL_CLOTHES
+    || utils.getType(product.type) === productType)
+    && (searchValue === '' || (product.name.toLowerCase().search(searchValue.toLowerCase()) !== -1)
+    ),
+);
 
 const productsReducer = (state, action) => {
   let newProducts = [];
@@ -30,6 +38,8 @@ const productsReducer = (state, action) => {
         filterProducts: action.payload.products,
         favoriteProducts: action.payload.favorites,
         cartProducts: action.payload.carts,
+        productType: ALL_CLOTHES,
+        searchValue: '',
       };
 
     case ADD_CART:
@@ -93,14 +103,14 @@ const productsReducer = (state, action) => {
       return newProducts;
 
     case FILTER:
-      return {
+      const fState = ({
         ...state,
-        filterProducts: state.products.filter(
-          (product) => (action.payload.type === ALL_CLOTHES
-            || utils.getType(product.type) === action.payload.type)
-            && (action.payload.search === ''
-              || product.name.toLowerCase().indexOf(action.payload.search.toLowerCase()) !== -1),
-        ),
+        productType: action.payload.type,
+        searchValue: action.payload.search,
+      });
+      return {
+        ...fState,
+        filterProducts: filterProducts(fState),
       };
 
     case SET_CURRENT_PRODUCT:
@@ -115,6 +125,26 @@ const productsReducer = (state, action) => {
         ...state,
         cartProducts: [],
       };
+
+    case UPDATE_PRODUCT: {
+      const products = [].concat(state.products);
+      const fInd = products.findIndex(({ id }) => id === action.payload.id);
+      products.splice(
+        typeof fInd === 'number' ? fInd : Infinity,
+        1,
+        action.payload,
+      );
+
+      return {
+        ...state,
+        products,
+        filterProducts: filterProducts({
+          productType: state.productType,
+          searchValue: state.searchValue,
+          products,
+        }),
+      };
+    }
 
     default: return state;
   }

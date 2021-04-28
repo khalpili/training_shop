@@ -6,18 +6,6 @@ import ProductsContext from './productsContext';
 import productsReducer from './productsReducer';
 import types from '../types';
 
-const {
-  INIT,
-  ADD_CART,
-  ADD_FAVORITE,
-  REMOVE_CART,
-  REMOVE_FAVORITE,
-  FILTER,
-  SET_CURRENT_PRODUCT,
-  CHANGE_COUNT,
-  CLEAR_CART,
-} = types;
-
 const ProductsState = ({ children }) => {
   const initialState = {
     products: [],
@@ -30,10 +18,8 @@ const ProductsState = ({ children }) => {
   const [state, dispatch] = useReducer(productsReducer, initialState);
 
   const init = async (products) => {
-    const favoritesString = await AsyncStorage.getItem('favoriteProducts');
-    const favorites = favoritesString ? await JSON.parse(favoritesString) : [];
-    const cartsString = await AsyncStorage.getItem('cartProducts');
-    const carts = cartsString ? await JSON.parse(cartsString) : [];
+    const favorites = JSON.parse(await AsyncStorage.getItem('favoriteProducts') || '[]');
+    const carts = JSON.parse(await AsyncStorage.getItem('cartProducts') || '[]');
 
     const newFavorites = favorites.length
       ? favorites.filter((favorite) => products.find((product) => favorite.id === product.id))
@@ -47,7 +33,7 @@ const ProductsState = ({ children }) => {
     if (newCarts !== carts) AsyncStorage.setItem('cartProducts', JSON.stringify(newCarts));
 
     dispatch({
-      type: INIT,
+      type: types.INIT,
       payload: {
         products,
         favorites: newFavorites,
@@ -56,14 +42,16 @@ const ProductsState = ({ children }) => {
     });
   };
 
-  const addCart = (id) => dispatch({ type: ADD_CART, payload: id });
-  const addFavorite = (id) => dispatch({ type: ADD_FAVORITE, payload: id });
-  const removeCart = (id) => dispatch({ type: REMOVE_CART, payload: id });
-  const removeFavorite = (id) => dispatch({ type: REMOVE_FAVORITE, payload: id });
-  const filter = (type, search) => dispatch({ type: FILTER, payload: { type, search } });
-  const setCurrentProduct = (id) => dispatch({ type: SET_CURRENT_PRODUCT, payload: id });
-  const changeCount = (id, count) => dispatch({ type: CHANGE_COUNT, payload: { id, count } });
-  const clearCart = () => dispatch({ type: CLEAR_CART });
+  const addCart = (id) => dispatch({ type: types.ADD_CART, payload: id });
+  const addFavorite = (id) => dispatch({ type: types.ADD_FAVORITE, payload: id });
+  const removeCart = (id) => dispatch({ type: types.REMOVE_CART, payload: id });
+  const removeFavorite = (id) => dispatch({ type: types.REMOVE_FAVORITE, payload: id });
+  const filter = (type, search) => dispatch({ type: types.FILTER, payload: { type, search } });
+  const setCurrentProduct = (id) => dispatch({ type: types.SET_CURRENT_PRODUCT, payload: id });
+  const changeCount = (id, count) => dispatch({ type: types.CHANGE_COUNT, payload: { id, count } });
+  const clearCart = () => dispatch({ type: types.CLEAR_CART });
+  const updateProduct = (payload) => dispatch({ type: types.UPDATE_PRODUCT, payload });
+  const addProduct = (payload) => dispatch({ type: types.ADD_PRODUCT, payload });
 
   return (
     <ProductsContext.Provider
@@ -82,6 +70,8 @@ const ProductsState = ({ children }) => {
         setCurrentProduct,
         changeCount,
         clearCart,
+        updateProduct,
+        addProduct,
       }}
     >
       {children}

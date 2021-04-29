@@ -16,13 +16,9 @@ const { log } = console;
     log('WS client connection');
   });
 
-  app.post('/product', async ({ body }, res) => {
-    await cms.createProducts(body);
-    [body].flat(1).forEach((product) => {
-      io.emit(product.pid, product);
-    });
-    return res.status(200).send();
-  });
+  app.post('/product', async ({ body }, res) => cms.updateProducts({ data: body })
+    .then(() => res.status(200).send())
+    .catch(() => res.status(400).send()));
 
   app.post('/ws-out', async ({ body }, res) => {
     const { type, payload } = body;
@@ -38,6 +34,6 @@ const { log } = console;
 (function syncServices() {
   return shop
     .load()
-    .then(cms.createProducts)
+    .then(cms.updateProducts)
     .then(() => log('success sync'));
 }());

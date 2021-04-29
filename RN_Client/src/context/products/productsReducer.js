@@ -129,15 +129,11 @@ const productsReducer = (state, action) => {
     case UPDATE_PRODUCT: {
       const products = [].concat(state.products);
       const fInd = products.findIndex(({ id }) => id === action.payload.id);
-      if (typeof fInd === 'number') {
-        products.splice(
-          fInd,
-          1,
-          action.payload,
-        );
-      } else {
-        products.push(action.payload);
-      }
+      products.splice(
+        typeof fInd === 'number' ? fInd : Infinity,
+        1,
+        action.payload,
+      );
 
       return {
         ...state,

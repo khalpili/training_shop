@@ -17,7 +17,7 @@ const { log } = console;
   });
 
   app.post('/product', async ({ body }, res) => {
-    await cms.upload(body);
+    await cms.createProducts(body);
     [body].flat(1).forEach((product) => {
       io.emit(product.pid, product);
     });

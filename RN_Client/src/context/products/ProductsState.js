@@ -51,7 +51,6 @@ const ProductsState = ({ children }) => {
   const changeCount = (id, count) => dispatch({ type: types.CHANGE_COUNT, payload: { id, count } });
   const clearCart = () => dispatch({ type: types.CLEAR_CART });
   const updateProduct = (payload) => dispatch({ type: types.UPDATE_PRODUCT, payload });
-  const addProduct = (payload) => dispatch({ type: types.ADD_PRODUCT, payload });
 
   return (
     <ProductsContext.Provider
@@ -71,7 +70,6 @@ const ProductsState = ({ children }) => {
         changeCount,
         clearCart,
         updateProduct,
-        addProduct,
       }}
     >
       {children}

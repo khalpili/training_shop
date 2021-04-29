@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useContext } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
-
+import API from '../api/api';
 import CartListItem from './CartListItem';
 import productsContext from '../context/products/productsContext';
 
@@ -14,7 +14,7 @@ const CartList = ({ header }) => {
       key={item.id}
       name={item.name}
       price={item.price}
-      src={item.src}
+      src={API.CONTENT_URL + (item.image.formats.small.url || item.image.formats.thumbnail.url)}
       balance={item.balance}
       count={item.count}
       remove={() => removeCart(item.id)}

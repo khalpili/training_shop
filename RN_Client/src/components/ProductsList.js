@@ -38,7 +38,7 @@ const ProductsList = ({
       id={item.id}
       name={item.name}
       price={item.price}
-      src={item.src}
+      src={API.CONTENT_URL + (item.image.formats.small.url || item.image.formats.thumbnail.url)}
       balance={item.balance}
       navigation={navigation}
     />

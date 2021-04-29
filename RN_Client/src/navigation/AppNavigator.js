@@ -14,6 +14,7 @@ import TabIcon from '../components/TabIcon';
 import colors from '../constants/colors';
 import strings from '../constants/strings';
 import API from '../api/api';
+import WS from '../api/ws';
 
 const TAB_PRODUCTS = 'TAB_PRODUCTS';
 const TAB_FAVORITES = 'TAB_FAVORITES';
@@ -30,12 +31,16 @@ const AppNavigator = () => {
   const [lastHomeScreen, setLastHomeScreen] = useState(SCREEN_HOME);
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState('');
-  const { setCurrentProduct, init } = useContext(productsContext);
+  const { setCurrentProduct, init, updateProduct } = useContext(productsContext);
 
   const getProducts = async () => {
     try {
       const response = await API.getProducts();
       init(response);
+      WS.connect('product-update', (err, data) => {
+        const id = data.pid;
+        updateProduct({ ...data, id });
+      });
       setIsError(false);
     } catch (e) {
       setIsError(true);
@@ -45,6 +50,7 @@ const AppNavigator = () => {
 
   useEffect(() => {
     getProducts();
+    return () => WS.disconnect();
   }, []);
 
   const tabBarItems = [

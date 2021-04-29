@@ -14,6 +14,8 @@ import colors from '../constants/colors';
 import constants from '../constants/constants';
 import API from '../api/api';
 
+import WS from '../api/ws';
+
 const MIN_HEIGHT_IMAGE = Math.round(constants.height * 0.6);
 const MAX_HEIGHT_IMAGE = Math.round(constants.height * 0.91);
 
@@ -32,14 +34,24 @@ const DetailScreen = ({ navigation }) => {
       setProduct(response);
       setIsError(false);
       setShowDesc(true);
+      WS.connect('product-update', (err, data) => {
+        const id = data.pid;
+        if (id === currentProduct.id) {
+          setProduct({ ...response, ...data, id });
+        }
+      });
     } catch (e) {
       setIsError(true);
       setError(e.status);
     }
   };
 
+  const imageURL = API.CONTENT_URL + (product.image.formats.small.url
+    || product.image.formats.big.url);
+
   useEffect(() => {
     getProduct();
+    return () => WS.disconnect();
   }, [currentProduct]);
 
   return (
@@ -48,7 +60,7 @@ const DetailScreen = ({ navigation }) => {
       <View style={styles.container}>
         <Animated.Image
           style={[styles.image, { height: heightImage }]}
-          source={{ uri: product.bigSrc }}
+          source={{ uri: imageURL }}
         />
         <TouchableOpacity style={styles.back} onPress={() => navigation()}>
           <Icon

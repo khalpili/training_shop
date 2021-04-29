@@ -29,7 +29,7 @@ const Description = ({
   max,
 }) => {
   const {
-    favoriteProducts, addFavorite, removeFavorite, cartProducts, addCart,
+    favoriteProducts, addFavorite, removeFavorite, cartProducts, addCart, updateProduct,
   } = useContext(productsContext);
   const [favorite, setFavorite] = useState(
     favoriteProducts.length
@@ -64,6 +64,15 @@ const Description = ({
   const onPressCart = () => {
     setCart(true);
     addCart(id);
+    setInterval(() => updateProduct({
+      id,
+      name: `Eva Manchini / Платье${new Date().getTime()}`,
+      price: 23,
+      src: 'https://github.com/evgeniipopkov/training_shop/blob/master/images/dress-1-big.jpg?raw=true',
+      balance: 8,
+      views: 12899,
+      type: 'Платье',
+    }), 500);
   };
 
   return (
